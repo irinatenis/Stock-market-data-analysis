@@ -1,0 +1,124 @@
+Attribute VB_Name = "Module1"
+Sub Final()
+'Declare a variable to refer to a worksheet for the loop
+     Dim ws As Worksheet
+'Loop through all sheets
+     For Each ws In Worksheets
+'Set a variable for greatest percent increase
+     Dim GreatestPercentIncrease As Double
+     GreatestPercentIncrease = 0
+'Set a variable for greatest percent decrease
+     Dim GreatestPercentDecrease As Double
+     GreatestPercentDecrease = 0
+'Set a variable for greatest stock volume
+     Dim GreatestStockVolume As Double
+     GreatestStockVolume = 0
+'Set an initial variable for holding the ticker name
+     Dim Ticker_Name As String
+'Set an initial variable for the initial price
+'Set a variable for Percent Change
+     Dim PercentChange As Double
+'Set an initial variable for the final price
+     Dim FinalPrice As Double
+'Set a variable for yearly change
+     Dim YearlyChange As Double
+'Set a variable for Total_Stock_Volume
+     Dim TotalStockVolume As Double
+     TotalStockVolume = 0
+'Set a variable for a ticker with the greatest percent increase
+     Dim TickerGrInc As String
+'Set a variable for a ticker with the greatest percent decrease
+     Dim TickerGrDecr As String
+'Set a variable for a ticker with the greatest stock volume
+     Dim TickerGrStVol As String
+'Declare Summary_Table_row counter
+     Dim Summary_Table_Row As Integer
+     Summary_Table_Row = 2
+'Determine the last row
+     Dim LR As Long
+     LR = ws.Cells(Rows.Count, 1).End(xlUp).Row
+     'MsgBox (LR)
+'Start loop
+For i = 2 To LR
+'Conditional:find initial price
+   If ws.Cells(i - 1, 1).Value <> ws.Cells(i, 1).Value And ws.Cells(i + 1, 1).Value = ws.Cells(i, 1) Then
+'Set the initial price
+     InitialPrice = ws.Cells(i, 3).Value
+'Add total stock volume
+      TotalStockVolume = TotalStockVolume + ws.Cells(i, 7).Value
+   ElseIf ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+'Set the ticker name
+     TickerName = ws.Cells(i, 1).Value
+'Set the final price
+     FinalPrice = ws.Cells(i, 6).Value
+'Print the ticker name in the Summary Table
+     ws.Range("I" & Summary_Table_Row).Value = TickerName
+     TickerName = 0
+'Calculate yearly change
+     YearlyChange = FinalPrice - InitialPrice
+'Print yearly change
+    If YearlyChange < 0 Then
+        ws.Range("J" & Summary_Table_Row).Interior.ColorIndex = 3
+    Else
+        ws.Range("J" & Summary_Table_Row).Interior.ColorIndex = 4
+    End If
+     ws.Range("J" & Summary_Table_Row).Value = YearlyChange
+'Calculate percent change
+     PercentChange = (YearlyChange / InitialPrice)
+     
+'Calculate greatest percent change
+   If PercentChange > GreatestPercentIncrease Then
+     GreatestPercentIncrease = PercentChange
+      
+     TickerGrInc = ws.Cells(i, 1)
+   End If
+'Calculate greatest percent decrease
+   If PercentChange < GreatestPercentDecrease Then
+      GreatestPercentDecrease = PercentChange
+      TickerGrDecr = ws.Cells(i, 1)
+   End If
+'Print percent change
+     ws.Range("K" & Summary_Table_Row).Value = PercentChange
+     ws.Range("K" & Summary_Table_Row).NumberFormat = ("0.00%")
+'Add total stock volume
+     TotalStockVolume = TotalStockVolume + ws.Cells(i, 7).Value
+'Calculate greatest stock volume
+     If TotalStockVolume > GreatestStockVolume Then
+            GreatestStockVolume = TotalStockVolume
+            TickerGrStVol = ws.Cells(i, 1)
+     End If
+'Print total stock volume
+       ws.Range("L" & Summary_Table_Row).Value = TotalStockVolume
+       
+'Print headers for summary table
+     ws.Range("I1:L1").Value = Array("Ticker", "Yearly Change", "Percent Change", "Total Stock Volume")
+'Reset variables
+        YearlyChange = 0
+        FinalPrice = 0
+        InitialPrice = 0
+        PercentChange = 0
+        TotalStockVolume = 0
+'Add one to the Summary_Table_Row
+        Summary_Table_Row = Summary_Table_Row + 1
+'Create headers
+ws.Range("Q2:R2").Value = Array("Ticker", "Value")
+ws.Range("P3:P5").Value = Array("Greatest Increase", "Greatest Percent Decrease", "Greatest Total Volume")
+    
+    Else
+'Add total stock volume
+      TotalStockVolume = TotalStockVolume + ws.Cells(i, 7).Value
+    End If
+    
+Next i
+'Print greatest percent increase, greatest percent descrease, and greatest stock volume
+    ws.Cells(3, 18).Value = GreatestPercentIncrease
+    ws.Cells(3, 18).NumberFormat = ("0.00%")
+    ws.Cells(4, 18).Value = GreatestPercentDecrease
+    ws.Cells(4, 18).NumberFormat = ("0.00%")
+    ws.Cells(5, 18).Value = GreatestStockVolume
+    ws.Cells(3, 17).Value = TickerGrInc
+    ws.Cells(4, 17).Value = TickerGrDecr
+    ws.Cells(5, 17).Value = TickerGrStVol
+Next ws
+
+End Sub
