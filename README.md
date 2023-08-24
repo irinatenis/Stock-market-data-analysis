@@ -1,5 +1,5 @@
 # Stock market data analysis
-### Goal:
+### Goal
 To analyze  generated stock market data for 3 years.
 
 ### Technology
