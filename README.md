@@ -1,10 +1,11 @@
-# VBA-challenge
-Analyzing  generated stock market data for 3 years.
+# Stock market data analysis
+### Goal:
+To analyze  generated stock market data for 3 years.
 
-# Technology
+### Technology
 VBA
 
-# Completed tasks
+### Completed tasks
 Created a script to find the following for every ticker name:
 - Yearly price change 
 - The percentage change 
